@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="findpartner"
+  id="myeclipse.1435079790638"
+  context-root="/findpartner"
+  j2ee-spec="5.0"
+  archive="findpartner.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

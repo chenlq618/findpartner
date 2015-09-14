@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.findpartner.dao.TeamDao">
+
+
+	<!-- 发起一个组队 -->
+	<insert id="addTeam" parameterType="com.findpartner.bean.TeamInfo">
+		insert into
+		teamInfo(teamName,teamIcon,teamCount,startTime,endTime,location,needing,additionNeading,pics,leader,state,type1,type2)
+		values(
+		#{teamName,jdbcType=VARCHAR},#{teamIcon,jdbcType=VARCHAR},
+		#{teamCount,jdbcType=INTEGER},#{startTime,jdbcType=VARCHAR},
+		#{endTime,jdbcType=VARCHAR},#{location,jdbcType=VARCHAR},
+		#{needing,jdbcType=VARCHAR},
+		#{additionNeading,jdbcType=VARCHAR},#{pics,jdbcType=VARCHAR},
+		#{leader,jdbcType=VARCHAR},#{state,jdbcType=INTEGER},
+		#{type1,jdbcType=VARCHAR},#{type2,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 申请加入队 -->
+
+	<insert id="addMenber" parameterType="com.findpartner.bean.TeamMenber">
+		insert into
+		teamMenber(teamId,teamName,menber,isCheck) values(
+		#{teamId,jdbcType=INTEGER},#{teamName,jdbcType=VARCHAR},
+		#{menber,jdbcType=VARCHAR},2
+		)
+	</insert>
+
+	<select id="menberCounts" parameterType="Integer" resultType="Integer">
+		select
+		count(distinct menber)
+		from teamMenber
+		where
+		teamId=#{teamId,jdbcType=INTEGER} and isCheck=1
+	</select>
+
+	<select id="isMenber" parameterType="com.findpartner.bean.TeamMenber"
+		resultType="Integer">
+		select
+		count(distinct menber)
+		from teamMenber m,teamInfo i
+		where
+		m.teamId=#{teamId,jdbcType=INTEGER} and
+		i.teamId=#{teamId,jdbcType=INTEGER} and
+		(leader=#{menber,jdbcType=VARCHAR} or (menber=#{menber,jdbcType=VARCHAR} and isCheck =1))
+	</select>
+	
+	<!-- 是否已经申请过，如果申请了 -->
+	<select id="isApply" parameterType="com.findpartner.bean.TeamMenber"
+		resultType="Integer">
+		select
+		count(distinct menber)
+		from teamMenber m,teamInfo i
+		where
+		m.teamId=#{teamId,jdbcType=INTEGER} and
+		i.teamId=#{teamId,jdbcType=INTEGER} and
+		(menber=#{menber,jdbcType=VARCHAR} or leader=#{menber,jdbcType=VARCHAR})
+		and isCheck  &lt;  3
+	</select>
+
+	<select id="getTeamInfoById" parameterType="Integer"
+		resultType="com.findpartner.bean.TeamInfo">
+		select *
+		from teamInfo
+		where
+		teamId=#{teamId,jdbcType=INTEGER}
+	</select>
+
+
+
+	<!-- 显示队伍信息 -->
+	<select id="getTeamsInfo" parameterType="com.findpartner.bean.TeamInfo"
+		resultType="com.findpartner.bean.TeamInfo">
+		select
+		teamId,teamName,teamIcon,teamCount,startTime,endTime,location,needing,additionNeading,pics,leader,state,type1,type2,
+		timestampdiff(day,now(),endTime) as leaveDay,
+		mod(timestampdiff(hour,now(),endTime),24) as leaveHour,
+		mod(timestampdiff(minute,now(),endTime),24) as leaveMinus
+		from teamInfo
+		where
+		<if test="state != null">
+			state = #{state}
+		</if>
+		<if test="state == null">
+			state = 1
+		</if>
+			and endTime &gt; now()
+		<if test="leader != null">
+			and leader = #{leader ,jdbcType=VARCHAR}
+		</if>
+
+		<if test="state != null">
+			and state = #{state}
+		</if>
+		<if test="teamId != null">
+			and teamId = #{teamId,jdbcType=VARCHAR}
+		</if>
+		order by startTime desc
+		limit #{start},#{pageSize}
+	</select>
+
+	<!-- get team member info -->
+	<select id="getTeamMenbers" parameterType="com.findpartner.bean.TeamMenber"
+		resultType="com.findpartner.bean.TeamMenber">
+		select *
+		from teamMenber
+		where
+		teamId=#{teamId,jdbcType=INTEGER}
+		<if test="menber != null">
+			and menber = #{menber,jdbcType=VARCHAR}
+		</if>
+		<if test="isCheck != null">
+			and isCheck = #{isCheck}
+		</if>
+	</select>
+
+
+
+	<select id="getMenberInfo" parameterType="String"
+		resultType="com.findpartner.bean.UserInfo">
+		select
+		phone,nickname,sex,age,selIntroduce,address,userIcon,university,school,grade,major
+		from userinfo
+		where
+		phone=#{phone,jdbcType=INTEGER}
+	</select>
+
+
+	<update id="delTeam" parameterType="com.findpartner.bean.TeamInfo">
+		update  teamInfo
+		set state=3
+		where teamId=#{teamId} and leader=#{leader,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateTeamMenberState" parameterType="com.findpartner.bean.TeamMenber" >
+		update teamMenber
+		set isCheck=#{isCheck}
+		where teamId=#{teamId} and menber=#{menber,jdbcType=VARCHAR}
+	</update>
+
+
+
+	<!-- 查询 -->
+	<select id="getTeamsInfoByUser" parameterType="com.findpartner.bean.TeamInfo"
+		resultType="com.findpartner.bean.TeamInfo">
+		select distinct t.teamId as teamId,t.teamName as teamName,
+		teamCount,startTime,endTime,location,needing,additionNeading,leader,state,type1,type2,teamIcon,pics
+		from teamInfo t,teamMenber m
+		where t.teamId = m.teamId
+		<if test="state != null">
+			and state = #{state}
+		</if>
+		and (t.leader=#{leader,jdbcType=VARCHAR} or m.menber=#{leader,jdbcType=VARCHAR} )
+		order by t.startTime desc
+		limit
+		#{start},#{pageSize}
+	</select>
+	
+	<update id="updateTeamState" >
+		update teamInfo
+		set state=2
+		where state=1 and endTime &lt; now()
+	</update>
+
+
+</mapper>

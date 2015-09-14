@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+
+
+	<!-- 整个web上下文初始化参数 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value>
+	</context-param>
+
+	<!-- 字符编码过滤器 -->
+	<filter>
+		<description>字符集过滤器</description>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<description>字符集编码</description>
+			<param-name>encoding</param-name>
+			<param-value>utf8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- spring监听器 -->
+	<listener>
+		<description>spring监听器</description>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+
+	<!-- spring mvc servlet 配置 -->
+	<servlet>
+		<servlet-name>springMvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring-mvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>springMvc</servlet-name>
+		<url-pattern>*.json</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>springMvc</servlet-name>
+		<url-pattern>*.action</url-pattern>
+	</servlet-mapping>
+	<!-- 他是最后一个要配置的，代表15分钟 -->
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
+
+
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

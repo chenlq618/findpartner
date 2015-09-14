@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.findpartner.dao.UserDao">
+
+
+	<!-- 插入用户信息 -->
+	<insert id="inserUser" parameterType="com.findpartner.bean.UserInfo">
+		insert into
+		userinfo(phone,password,nickname,sex,age,selIntroduce,address,userIcon,university,school,grade,major)
+		values(#{phone,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
+		#{nickname,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},
+		#{age,jdbcType=INTEGER},#{selIntroduce,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},#{userIcon,jdbcType=VARCHAR},
+		#{university,jdbcType=VARCHAR},#{school,jdbcType=VARCHAR},
+		#{grade,jdbcType=INTEGER},#{major,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 查询用户信息 -->
+	<select id="getUserInfo" parameterType="String"
+		resultType="com.findpartner.bean.UserInfo">
+		SELECT * FROM userinfo WHERE
+		phone=#{phone,jdbcType=VARCHAR}
+	</select>
+
+
+	<!-- 修改用户信息 ， -->
+	<update id="updateUserInfo" parameterType="com.findpartner.bean.UserInfo">
+		update userinfo
+		set
+		<if test="password != null">
+			password = #{password},
+		</if>
+		<if test="nickname != null">
+			 nickname = #{nickname},
+		</if>
+		<if test="sex != null">
+			sex = #{sex},
+		</if>
+		<if test="age != null">
+			 age = #{age},
+		</if>
+		<if test="selIntroduce != null">
+			selIntroduce = #{selIntroduce},
+		</if>
+		<if test="address != null">
+			 address = #{address},
+		</if>
+		<if test="userIcon != null">
+			userIcon = #{userIcon},
+		</if>
+		<if test="university != null">
+			 university = #{university},
+		</if>
+		<if test="school != null">
+			 school = #{school},
+		</if>
+		<if test="grade != null">
+			grade = #{grade},
+		</if>
+		<if test="major != null">
+			 major = #{major},
+		</if>
+		login =1
+		where phone=#{phone,jdbcType=VARCHAR}
+	</update>
+
+
+	<!-- 查询学校信息 -->
+	<select id="getSchoolInfo" parameterType="String"
+		resultType="com.findpartner.bean.University">
+		SELECT * FROM university WHERE
+		universityId=#{universityId,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

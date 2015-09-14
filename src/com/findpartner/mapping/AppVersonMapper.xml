@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.findpartner.dao.VersionDao">
+	<select id="getVersion" resultType="com.findpartner.bean.AppVersion">
+		SELECT versionCode,versionName,subVersionCode FROM appVersion
+		where id=(select max(id) from appVersion)
+	</select>
+</mapper>
