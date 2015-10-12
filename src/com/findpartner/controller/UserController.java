@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import redis.clients.jedis.Jedis;
 
+import com.findpartner.bean.BaseUserInfo;
 import com.findpartner.bean.UserInfo;
 import com.findpartner.service.UserService;
 import com.findpartner.util.Constants;
@@ -252,7 +253,6 @@ public class UserController {
 		HashMap params = new HashMap();
 
 		result.put("info", info);
-
 		String phone = request.getParameter("phone");
 		params.put("userId", phone);
 		UserInfo user = new UserInfo();
@@ -263,15 +263,15 @@ public class UserController {
 		if (request.getParameter("nickname") != null) {
 			params.put("name", request.getParameter("nickname"));
 		}
-		try {
-
-		} catch (Exception e) {
-
-		}
+		String sex = request.getParameter("sex");
+		user.setSex(sex);
 
 		String age = request.getParameter("age");
 		if (age != null) {
+			try{
 			user.setAge(Integer.parseInt(age));
+			}catch (Exception e) {
+			}
 		}
 		user.setSelIntroduce(request.getParameter("selIntroduce"));
 		user.setAddress(request.getParameter("address"));
@@ -341,6 +341,15 @@ public class UserController {
 		}
 		result.put("userInfo", user);
 		result.put("talkToken", jedis.get(user.getPhone()+"talkToken"));
+		return result;
+	}
+	
+	@RequestMapping(value = "getBaseUserInfo.json")
+	@ResponseBody
+	public Map<String, Object> getBaseUserInfo(HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		BaseUserInfo user = userService.getBaseUserInfo(request.getParameter("phone"));
+		result.put("userInfo", user);
 		return result;
 	}
 

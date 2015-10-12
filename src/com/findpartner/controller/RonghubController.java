@@ -141,7 +141,7 @@ public class RonghubController {
 	@ResponseBody
 	public JSONObject groupCreate(HttpServletRequest request) throws Exception {
 		HashMap params = new HashMap();
-		String userIds = request.getParameter("userIds");// �����Ա����|�ָ�����aa|bb
+		String userIds = request.getParameter("userIds");
 		String groupId = request.getParameter("groupId");
 		String groupName = request.getParameter("groupName");
 		if (userIds != null && !"".equals(userIds) && groupId != null
@@ -166,7 +166,7 @@ public class RonghubController {
 	@ResponseBody
 	public JSONObject groupJoin(HttpServletRequest request) throws Exception {
 		HashMap params = new HashMap();
-		String userIds = request.getParameter("userIds");// �����Ա����|�ָ�����aa|bb
+		String userIds = request.getParameter("userIds");
 		String groupId = request.getParameter("groupId");
 		if (userIds != null && !"".equals(userIds) && groupId != null
 				&& !"".equals(groupId)) {
@@ -187,7 +187,7 @@ public class RonghubController {
 	@ResponseBody
 	public JSONObject groupQuit(HttpServletRequest request) throws Exception {
 		HashMap params = new HashMap();
-		String userIds = request.getParameter("userIds");// �����Ա����|�ָ�����aa|bb
+		String userIds = request.getParameter("userIds");
 		String groupId = request.getParameter("groupId");
 		if (userIds != null && !"".equals(userIds) && groupId != null
 				&& !"".equals(groupId)) {
@@ -208,7 +208,7 @@ public class RonghubController {
 	@ResponseBody
 	public JSONObject groupDismiss(HttpServletRequest request) throws Exception {
 		HashMap params = new HashMap();
-		String userId = request.getParameter("userId");// �����Ա����|�ָ�����aa|bb
+		String userId = request.getParameter("userId");
 		String groupId = request.getParameter("groupId");
 		if (userId != null && !"".equals(userId) && groupId != null
 				&& !"".equals(groupId)) {
@@ -225,7 +225,7 @@ public class RonghubController {
 	@ResponseBody
 	public JSONObject groupRefresh(HttpServletRequest request) throws Exception {
 		HashMap params = new HashMap();
-		String userId = request.getParameter("userId");// �����Ա����|�ָ�����aa|bb
+		String userId = request.getParameter("userId");
 		String groupId = request.getParameter("groupId");
 		String groupName= request.getParameter("groupName");
 		if (userId != null && !"".equals(userId) && groupId != null

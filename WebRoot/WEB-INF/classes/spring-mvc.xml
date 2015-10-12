@@ -21,7 +21,8 @@ http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<!-- 拦截所有url path="/**" -->
-			<mvc:mapping path="/**.json" />
+			<mvc:mapping path="/auser/**" />
+			<mvc:mapping path="/ateam/**" />
 			<bean class="com.findpartner.interceptor.JsonInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>

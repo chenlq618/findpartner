@@ -17,6 +17,7 @@ public class TeamInfo implements java.io.Serializable {
 	private String teamName;
 	private String teamIcon;
 	private Integer teamCount;
+	private String releaseTime;// 发布时间
 	private String startTime;
 	private String endTime;
 	private String location; 
@@ -24,6 +25,8 @@ public class TeamInfo implements java.io.Serializable {
 	private String additionNeading;
 	private String pics;
 	private String[] pics2;
+	private Integer nowMemberCount;//当前通过审核的人数
+	
 	
 	public String[] getPics2() {
 		if(pics!=null && !"".equals(pics)){
@@ -104,6 +107,13 @@ public class TeamInfo implements java.io.Serializable {
 		this.teamName = teamName;
 	}
 
+	
+	public String getReleaseTime() {
+		return releaseTime;
+	}
+	public void setReleaseTime(String releaseTime) {
+		this.releaseTime = releaseTime;
+	}
 	public Integer getTeamCount() {
 		return this.teamCount;
 	}
@@ -163,6 +173,13 @@ public class TeamInfo implements java.io.Serializable {
 		this.state = state;
 	}
 
+	
+	public Integer getNowMemberCount() {
+		return nowMemberCount;
+	}
+	public void setNowMemberCount(Integer nowMemberCount) {
+		this.nowMemberCount = nowMemberCount;
+	}
 	public String getType1() {
 		return this.type1;
 	}

@@ -21,5 +21,10 @@ public class ImageCompress {
 		BufferedImage image = ImageIO.read(srcImg);
 		Thumbnails.of(image).scale(0.4f).toFile(disImg);
 	}
+	
+	public static void main(String[] args) throws IOException {
+		File f=new File("i:\\23456789012.png");
+		CompressByPercent(f,"i:\\a.png");
+	}
 
 }

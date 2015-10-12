@@ -6,10 +6,17 @@
 	<!-- 发起一个组队 -->
 	<insert id="addTeam" parameterType="com.findpartner.bean.TeamInfo">
 		insert into
-		teamInfo(teamName,teamIcon,teamCount,startTime,endTime,location,needing,additionNeading,pics,leader,state,type1,type2)
+		teamInfo(teamName,teamIcon,teamCount,releaseTime,startTime,endTime,location,needing,additionNeading,pics,leader,state,type1,type2)
 		values(
 		#{teamName,jdbcType=VARCHAR},#{teamIcon,jdbcType=VARCHAR},
-		#{teamCount,jdbcType=INTEGER},#{startTime,jdbcType=VARCHAR},
+		<if test="teamCount == null">
+			-1,
+		</if>
+		<if test="teamCount != null">
+			#{teamCount,jdbcType=INTEGER},
+		</if>
+		now(),
+		#{startTime,jdbcType=VARCHAR},
 		#{endTime,jdbcType=VARCHAR},#{location,jdbcType=VARCHAR},
 		#{needing,jdbcType=VARCHAR},
 		#{additionNeading,jdbcType=VARCHAR},#{pics,jdbcType=VARCHAR},
@@ -30,7 +37,7 @@
 
 	<select id="menberCounts" parameterType="Integer" resultType="Integer">
 		select
-		count(distinct menber)
+		count(distinct menber)+1
 		from teamMenber
 		where
 		teamId=#{teamId,jdbcType=INTEGER} and isCheck=1
@@ -39,33 +46,39 @@
 	<select id="isMenber" parameterType="com.findpartner.bean.TeamMenber"
 		resultType="Integer">
 		select
-		count(distinct menber)
-		from teamMenber m,teamInfo i
+		count(1)
+		from teamInfo i
+		left join teamMenber m
+		on i.teamId=m.teamId
 		where
-		m.teamId=#{teamId,jdbcType=INTEGER} and
 		i.teamId=#{teamId,jdbcType=INTEGER} and
 		(leader=#{menber,jdbcType=VARCHAR} or (menber=#{menber,jdbcType=VARCHAR} and isCheck =1))
 	</select>
 	
-	<!-- 是否已经申请过，如果申请了 -->
-	<select id="isApply" parameterType="com.findpartner.bean.TeamMenber"
+	<!-- 是否已经申请过（到时要改 canApply） -->
+	<select id="canApply" parameterType="com.findpartner.bean.TeamMenber"
 		resultType="Integer">
-		select
-		count(distinct menber)
-		from teamMenber m,teamInfo i
+		select count(i.teamId)
+		from teamInfo i
+		left join teamMenber m
+		on i.teamId=m.teamId
 		where
-		m.teamId=#{teamId,jdbcType=INTEGER} and
-		i.teamId=#{teamId,jdbcType=INTEGER} and
-		(menber=#{menber,jdbcType=VARCHAR} or leader=#{menber,jdbcType=VARCHAR})
-		and isCheck  &lt;  3
+		<if test="teamId != null">
+			i.teamId = #{teamId} and
+		</if>
+		 (( menber=#{menber,jdbcType=VARCHAR} and isCheck  &lt;  3) or
+		 leader=#{menber,jdbcType=VARCHAR} )
+		
 	</select>
 
 	<select id="getTeamInfoById" parameterType="Integer"
 		resultType="com.findpartner.bean.TeamInfo">
-		select *
-		from teamInfo
+		select p.* ,count( case isCheck when 1 then 1 else null end)+1 nowMemberCount from
+		(select t.*,
+		isCheck
+		from teamInfo t left join teamMenber m on t.teamId=m.teamId
 		where
-		teamId=#{teamId,jdbcType=INTEGER}
+		t.teamId=#{teamId,jdbcType=INTEGER})p
 	</select>
 
 
@@ -73,36 +86,39 @@
 	<!-- 显示队伍信息 -->
 	<select id="getTeamsInfo" parameterType="com.findpartner.bean.TeamInfo"
 		resultType="com.findpartner.bean.TeamInfo">
-		select
-		teamId,teamName,teamIcon,teamCount,startTime,endTime,location,needing,additionNeading,pics,leader,state,type1,type2,
+		select * from
+	(select p.* ,count( case isCheck when 1 then 1 else null end)+1 nowMemberCount from		
+		(select
+		t.teamId,t.teamName,teamIcon,teamCount,startTime,endTime,location,needing,additionNeading,pics,leader,state,type1,type2,
 		timestampdiff(day,now(),endTime) as leaveDay,
 		mod(timestampdiff(hour,now(),endTime),24) as leaveHour,
-		mod(timestampdiff(minute,now(),endTime),24) as leaveMinus
-		from teamInfo
+		mod(timestampdiff(minute,now(),endTime),24) as leaveMinus,
+		isCheck
+		from teamInfo t left join teamMenber m on t.teamId=m.teamId
 		where
 		<if test="state != null">
-			state = #{state}
+			state = #{state} and
 		</if>
 		<if test="state == null">
-			state = 1
+			state = 1 and
 		</if>
-			and endTime &gt; now()
+			 endTime &gt; now()
 		<if test="leader != null">
 			and leader = #{leader ,jdbcType=VARCHAR}
 		</if>
-
-		<if test="state != null">
-			and state = #{state}
-		</if>
 		<if test="teamId != null">
-			and teamId = #{teamId,jdbcType=VARCHAR}
+			and t.teamId = #{teamId,jdbcType=VARCHAR}
 		</if>
-		order by startTime desc
+		) p
+		group by p.teamId
+		) g
+		where g.teamId is not null
+		order by g.teamId desc
 		limit #{start},#{pageSize}
 	</select>
 
 	<!-- get team member info -->
-	<select id="getTeamMenbers" parameterType="com.findpartner.bean.TeamMenber"
+	<select id="getTeamFlowerMenbers" parameterType="com.findpartner.bean.TeamMenber"
 		resultType="com.findpartner.bean.TeamMenber">
 		select *
 		from teamMenber
@@ -116,6 +132,14 @@
 		</if>
 	</select>
 
+
+	<select id="getTeamMenbers" parameterType="Integer"
+		resultType="com.findpartner.bean.MemberInfo">
+		select u.phone,nickname,userIcon,sex,selIntroduce ,a.role from userinfo u,
+		((select leader as phone,1 as role from teamInfo where teamId=#{teamId})
+		union (select menber as phone,0 as role from teamMenber where teamId=#{teamId} and isCheck=1)) a
+		where u.phone=a.phone
+	</select>
 
 
 	<select id="getMenberInfo" parameterType="String"
@@ -145,24 +169,68 @@
 	<!-- 查询 -->
 	<select id="getTeamsInfoByUser" parameterType="com.findpartner.bean.TeamInfo"
 		resultType="com.findpartner.bean.TeamInfo">
-		select distinct t.teamId as teamId,t.teamName as teamName,
-		teamCount,startTime,endTime,location,needing,additionNeading,leader,state,type1,type2,teamIcon,pics
-		from teamInfo t,teamMenber m
-		where t.teamId = m.teamId
+		select * from (
+		select p.* ,count( case isCheck when 1 then 1 else null end)+1 nowMemberCount from
+		(select distinct t.teamId as teamId,t.teamName as teamName,
+		teamCount,startTime,endTime,location,needing,additionNeading,leader,state,type1,type2,teamIcon,pics,isCheck
+		from teamInfo t left join teamMenber m on t.teamId=m.teamId
+		where
 		<if test="state != null">
-			and state = #{state}
+			state = #{state} and
 		</if>
-		and (t.leader=#{leader,jdbcType=VARCHAR} or m.menber=#{leader,jdbcType=VARCHAR} )
-		order by t.startTime desc
+		(t.leader=#{leader,jdbcType=VARCHAR} or (m.menber=#{leader,jdbcType=VARCHAR} and m.isCheck=1) )
+		)p
+		group by p.teamId
+		) g 
+		where teamId is not null
+		order by teamId desc
 		limit
 		#{start},#{pageSize}
 	</select>
 	
-	<update id="updateTeamState" >
+	<update id="updateOutdatedTeamState" >
 		update teamInfo
-		set state=2
-		where state=1 and endTime &lt; now()
+		set state=
+		case when startTime &gt; now() then 0
+			 when endTime &lt; now() then 2 
+			 else 1
+		end
+		where state!=3 and (startTime &gt; now() or endTime &lt; now())
 	</update>
+	
+	
+	<!-- 查询 -->
+	<select id="getTeamId" parameterType="com.findpartner.bean.TeamInfo"
+		resultType="Integer">
+		select  teamId
+		from teamInfo
+		where
+		leader=#{leader,jdbcType=VARCHAR}
+		and startTime=#{startTime,jdbcType=VARCHAR}
+		and endTime=#{endTime,jdbcType=VARCHAR}
+		<if test="teamName != null">
+			and teamName = #{teamName,jdbcType=VARCHAR}
+		</if>
+		<if test="needing != null">
+			and needing = #{needing,jdbcType=VARCHAR}
+		</if>
+		<if test="additionNeading != null">
+			and additionNeading = #{additionNeading,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+		<!-- 查询 -->
+	<select id="isExitOrUnCheck" parameterType="com.findpartner.bean.TeamMenber"
+		resultType="Integer">
+		select  count(1)
+		from teamMenber
+		where teamId=#{teamId} and #{menber,jdbcType=VARCHAR} and isCheck>2
+	</select>
 
+	<update id="refuseRestApply"  parameterType="Integer">
+		update teamMenber
+		set isCheck=3
+		where teamId=#{teamId} and isCheck=2;
+	</update>
 
 </mapper>

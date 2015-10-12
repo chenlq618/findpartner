@@ -71,5 +71,13 @@
 		SELECT * FROM university WHERE
 		universityId=#{universityId,jdbcType=VARCHAR}
 	</select>
+	
+	
+		<!-- 查询学校信息 -->
+	<select id="getBaseUserInfo" parameterType="String"
+		resultType="com.findpartner.bean.BaseUserInfo">
+		SELECT * FROM userinfo WHERE
+		phone=#{phone,jdbcType=VARCHAR}
+	</select>
 
 </mapper>

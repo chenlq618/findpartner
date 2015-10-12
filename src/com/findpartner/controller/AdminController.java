@@ -17,8 +17,8 @@ public class AdminController {
 	
 	
 	@RequestMapping(value = "login.action")
-	public String getTalkToken(HttpServletRequest request) throws Exception {
-		System.out.println(request.getParameter("user"));
+	public String login(HttpServletRequest request) throws Exception {
+		System.out.println(request.getParameter("userId"));
 		return "success.jsp";
 	}
 

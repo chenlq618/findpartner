@@ -24,7 +24,6 @@ public class JsonInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
 
-				
 		String url = request.getRequestURL().toString();
 		
 		if (url.indexOf("login.json") > -1 || url.indexOf("regist.json")>-1) {

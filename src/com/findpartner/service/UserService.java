@@ -2,6 +2,7 @@ package com.findpartner.service;
 
 import java.util.List;
 
+import com.findpartner.bean.BaseUserInfo;
 import com.findpartner.bean.University;
 import com.findpartner.bean.UserInfo;
 
@@ -12,4 +13,6 @@ public interface UserService {
 
 	public UserInfo getUserInfo(String phone);// 查询用户信息
 	public List<University> getSchoolInfo(String universityId);
+	
+	public BaseUserInfo getBaseUserInfo(String phone);
 }

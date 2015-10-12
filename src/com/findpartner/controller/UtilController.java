@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import redis.clients.jedis.Jedis;
 
+import com.findpartner.bean.Feedback;
+import com.findpartner.dao.FeedbackDao;
 import com.findpartner.dao.VersionDao;
 import com.findpartner.util.Constants;
 
@@ -21,6 +23,9 @@ public class UtilController {
 	
 	@Autowired(required = true)
 	VersionDao versionDao;
+	@Autowired(required = true)
+	FeedbackDao feedbackDao;
+	
 	@RequestMapping(value = "getVersion.json")
 	@ResponseBody
 	public Map<String, Object> getVersion(HttpServletRequest request)
@@ -47,6 +52,19 @@ public class UtilController {
 			jedis.set(phone+"talkToken", talkToken);
 		}
 		result.put("talkToken",talkToken );
+		return result;
+	}
+	
+	@RequestMapping(value = "feedback.json")
+	@ResponseBody
+	public Map<String, Object> feedback(HttpServletRequest request)
+			throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Feedback feedback=new Feedback();
+		feedback.setUserId(request.getParameter("phone"));
+		feedback.setFeedback(request.getParameter("feedback"));
+		feedbackDao.insert(feedback);
+		result.put("code", 1);
 		return result;
 	}
 	

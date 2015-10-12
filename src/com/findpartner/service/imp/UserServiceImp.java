@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.findpartner.bean.BaseUserInfo;
 import com.findpartner.bean.University;
 import com.findpartner.bean.UserInfo;
 import com.findpartner.dao.UserDao;
@@ -30,6 +31,10 @@ public class UserServiceImp implements UserService {
 	
 	public List<University> getSchoolInfo(String universityId){
 		return userDao.getSchoolInfo(universityId);
+	}
+	
+	public BaseUserInfo getBaseUserInfo(String phone){
+		return userDao.getBaseUserInfo(phone);
 	}
 
 }
