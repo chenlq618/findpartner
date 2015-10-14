@@ -152,7 +152,7 @@ public class TeamServiceImp implements TeamService {
 		return teamDao.getTeamsInfoByUser(team);
 	}
 
-	// 获得申请状态(当是-1时，表示没进行任何申请;当是1时，表示同意加入;当是2时表示等待审核，当是3时表示不同意加入;当是4时表示退出；当是5)
+	// 获得申请状态(当是-1时，表示没进行任何申请;当是1时，表示同意加入;当是2时表示等待审核，当是3时表示不同意加入;当是4时表示退出；)
 	public int getApplicationState(TeamMenber menber) {
 
 		List<TeamMenber> t = teamDao.getTeamFlowerMenbers(menber);

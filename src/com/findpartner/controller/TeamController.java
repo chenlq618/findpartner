@@ -221,7 +221,7 @@ public class TeamController {
 			leaderPush.setMenber(utm.getMemberInfo().getPhone());
 			leaderPush.setMenberIcon(utm.getMemberInfo().getUserIcon());
 			leaderPush.setMenberNickName(utm.getMemberInfo().getNickname());
-			leaderPush.setMenberSex(utm.getMemberInfo().getSex());
+			leaderPush.setMenberSex(""+utm.getMemberInfo().getSex());
 			leaderPush.setTeamId(teamId);
 			leaderPush.setTeamName(utm.getTeamInfo().getTeamName());
 			leaderPush.setType(2);

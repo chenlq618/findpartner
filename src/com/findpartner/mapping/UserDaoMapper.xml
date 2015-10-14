@@ -8,7 +8,7 @@
 		insert into
 		userinfo(phone,password,nickname,sex,age,selIntroduce,address,userIcon,university,school,grade,major)
 		values(#{phone,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
-		#{nickname,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},
+		#{nickname,jdbcType=VARCHAR},#{sex},
 		#{age,jdbcType=INTEGER},#{selIntroduce,jdbcType=VARCHAR},
 		#{address,jdbcType=VARCHAR},#{userIcon,jdbcType=VARCHAR},
 		#{university,jdbcType=VARCHAR},#{school,jdbcType=VARCHAR},

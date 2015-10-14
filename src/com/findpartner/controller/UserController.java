@@ -43,12 +43,10 @@ public class UserController {
 			throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		HashMap params = new HashMap();
-		String info = "";
 		String phone = request.getParameter("phone");
 		params.put("userId", phone);
 		if (userService.getUserInfo(phone) != null) {
 			result.put("requestState", 0);
-			info += "该号码已注册\n";
 		} else {
 			UserInfo user = new UserInfo();
 			user.setPhone(phone);
@@ -63,7 +61,7 @@ public class UserController {
 			}
 			String sex = request.getParameter("sex");
 			if (sex != null) {
-				user.setAge(Integer.parseInt(sex));
+				user.setSex(Integer.parseInt(sex));
 			}
 
 			String age = request.getParameter("age");
@@ -264,7 +262,12 @@ public class UserController {
 			params.put("name", request.getParameter("nickname"));
 		}
 		String sex = request.getParameter("sex");
-		user.setSex(sex);
+		if(sex!=null){
+			try{
+				user.setSex(Integer.parseInt(sex));
+				}catch (Exception e) {
+				}
+		}
 
 		String age = request.getParameter("age");
 		if (age != null) {

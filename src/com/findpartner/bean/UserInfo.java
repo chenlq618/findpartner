@@ -12,7 +12,7 @@ public class UserInfo implements java.io.Serializable {
 	private String deviceId;
 	private String password;
 	private String nickname;
-	private String sex;
+	private Integer sex;
 	private Integer age;
 	private String selIntroduce;
 	private String address;
@@ -57,11 +57,11 @@ public class UserInfo implements java.io.Serializable {
 		this.nickname = nickname;
 	}
 
-	public String getSex() {
-		return this.sex;
+	public Integer getSex() {
+		return sex;
 	}
 
-	public void setSex(String sex) {
+	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
 
