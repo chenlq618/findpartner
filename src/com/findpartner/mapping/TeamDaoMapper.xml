@@ -100,7 +100,7 @@
 			state = #{state} and
 		</if>
 		<if test="state == null">
-			state = 1 and
+			state &lt; 2 and
 		</if>
 			 endTime &gt; now()
 		<if test="leader != null">
