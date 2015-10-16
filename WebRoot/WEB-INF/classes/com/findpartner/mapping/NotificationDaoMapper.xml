@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.findpartner.dao.NotificationDao">
+	<!-- 查询 -->
+	<select id="getNotification" 
+		resultType="com.findpartner.bean.PushInfo">
+		select  *
+		from pushInfo t
+		where phone=#{phone,jdbcType=VARCHAR} and state=0
+		order by t.id desc
+		limit #{start},#{size}
+	</select>
+	
+	<insert id="insertNotification" parameterType="com.findpartner.bean.PushInfo">
+		insert into pushInfo(phone,
+		menber,
+		menberNickName,
+		menberIcon,
+		menberSex,
+		teamId,
+		teamName,
+		pushDate,
+		type,
+		info,
+		applyInfo,
+		state
+		) values(
+		#{phone,jdbcType=VARCHAR},
+		#{menber,jdbcType=VARCHAR},
+		#{menberNickName,jdbcType=VARCHAR},
+		#{menberIcon,jdbcType=VARCHAR},
+		#{menberSex},
+		#{teamId},
+		#{teamName,jdbcType=VARCHAR},
+		now(),
+		#{type},
+		#{info,jdbcType=VARCHAR},
+		#{applyInfo,jdbcType=VARCHAR},
+		0
+		)
+	</insert>
+
+	<update id="updateState" >
+		update  pushInfo
+		set state=#{state}
+		where id=#{id}
+	</update>
+	
+</mapper>
