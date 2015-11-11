@@ -89,7 +89,7 @@
 		select * from
 	(select p.* ,count( case isCheck when 1 then 1 else null end)+1 nowMemberCount from		
 		(select
-		t.teamId,t.teamName,teamIcon,teamCount,startTime,endTime,location,needing,additionNeading,pics,leader,state,type1,type2,
+		t.teamId,t.teamName,teamIcon,teamCount,startTime,releaseTime,endTime,location,needing,additionNeading,pics,leader,state,type1,type2,
 		timestampdiff(day,now(),endTime) as leaveDay,
 		mod(timestampdiff(hour,now(),endTime),24) as leaveHour,
 		mod(timestampdiff(minute,now(),endTime),24) as leaveMinus,
@@ -108,6 +108,9 @@
 		</if>
 		<if test="teamId != null">
 			and t.teamId = #{teamId,jdbcType=VARCHAR}
+		</if>
+		<if test="releaseTime != null">
+			and t.releaseTime &gt; #{releaseTime,jdbcType=VARCHAR}
 		</if>
 		) p
 		group by p.teamId

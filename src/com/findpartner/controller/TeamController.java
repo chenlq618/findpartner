@@ -325,7 +325,8 @@ public class TeamController {
 		Map<String, String> info = new HashMap<String, String>();
 		result.put("info", info);
 		TeamInfo team = new TeamInfo();
-
+		String releaseTime=request.getParameter("releaseTime");
+		team.setReleaseTime(releaseTime);
 		String pageNo = request.getParameter("pageNo");
 		if (pageNo != null) {
 			try {

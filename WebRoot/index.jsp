@@ -21,7 +21,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-    <form action="user/regist.json" method="post" enctype="multipart/form-data">  
+    <form action="team/getTeamsInfo.json" method="post" enctype="multipart/form-data">  
     file:<input type="file" name="file"  >
     file2:<input type="file" name="myfiles"  multiple="multiple" >  
     
@@ -29,7 +29,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     deviceId<input type="text" name="deviceId">
     token<input type="text" name="token">
     password<input type="text" name="password">  
-    universityId<input type="text" name="universityId">  
+    releaseTime<input type="text" name="releaseTime">  
     <input type="submit" value="submit">   
 </form>  
   </body>
